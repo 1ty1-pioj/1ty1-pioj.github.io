@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        /* 星空背景：蓝变深紫+星星闪烁 */
+        .starry-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f3460 0%, #2a1066 100%);
+            overflow: hidden;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 3D光影+环境光遮挡+发光特效 */
+        .text-glow {
+            text-shadow: 0 0 10px currentColor, 0 0 15px currentColor, 0 0 20px currentColor;
+        }
+        .ambient-occlusion {
+            position: relative;
+        }
+        .ambient-occlusion::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 15%;
+            width: 70%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        /* 按钮跳动动画：放大缩小循环 */
+        .btn-pulse {
+            animation: pulse 2s infinite ease-in-out;
+            border: 2px solid white !important;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* 右上角论坛：可自由移动+白色填充+大白色边框 */
+        .forum-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 280px;
+            background: white;
+            border: 5px solid white; /* 大白色边框 */
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 0 25px rgba(255,255,255,0.9);
+            z-index: 100;
+            max-height: 80vh;
+            cursor: move; /* 移动光标提示 */
+            user-select: none;
+        }
+        /* 论坛内右上角小红圆关闭按钮 */
+        .forum-close {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 24px;
+            height: 24px;
+            background: red;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            z-index: 101;
+        }
+        /* 关闭论坛后显示的Open按钮 */
+        .open-forum-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 4px 8px;
+            background: white;
+            border: 3px solid white;
+            border-radius: 4px;
+            color: black;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,255,255,0.7);
+            z-index: 99;
+            display: none;
+        }
+        .forum-header {
+            margin-bottom: 8px;
+        }
+        .forum-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: black;
+            margin: 0;
+        }
+        .refresh-btn {
+            background: transparent;
+            border: 1px solid black;
+            padding: 3px 6px;
+            font-size: 11px;
+            color: black;
+            cursor: pointer;
+            margin-top: 4px;
+            border-radius: 3px;
+            transition: background 0.2s;
+        }
+        .refresh-btn:hover {
+            background: #f5f5f5;
+        }
+        #forum-messages {
+            height: 180px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+        .message-item {
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #eee;
+            font-size: 12px;
+            color: #333;
+            word-break: break-all;
+        }
+        #message-input {
+            width: calc(100% - 65px);
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+        #send-btn {
+            width: 60px;
+            padding: 6px;
+            background: #0f3460;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        #send-btn:hover {
+            background: #1a4a
